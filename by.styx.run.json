@@ -1,0 +1,7 @@
+{
+  "name": "by.styx.run",
+  "description": "Open with Pinta",
+  "path": "WRAPPER_PATH",
+  "type": "stdio",
+  "allowed_origins": ["chrome-extension://hfggbailalbacnhopomnnafchanediad/"]
+}
