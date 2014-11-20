@@ -2,7 +2,9 @@
 
 import struct
 import sys
+import subprocess
 import simplejson
+import urllib
 import os
 
 # Read the message length
@@ -18,9 +20,8 @@ programm = json['bin']
 basename = os.path.basename(url)
 tmp_path = '/tmp'
 
-quoted_path = '"' + tmp_path + '/' + basename + '"'
-
 # Fetch the file
-os.system('wget -c "' + json['srcUrl'] + '" -O ' + quoted_path)
-# Open the file
-os.system('/usr/bin/env ' + programm + ' ' + quoted_path)
+local_filename, headers = urllib.urlretrieve(json['srcUrl'], tmp_path+'/'+basename)
+
+# Open
+os.system('/usr/bin/env '+programm+' "'+local_filename+'"'+' > /tmp/test')
