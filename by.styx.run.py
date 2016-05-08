@@ -3,25 +3,35 @@
 import struct
 import sys
 import subprocess
-import simplejson
-import urllib
 import os
+import platform
+import json
+import tempfile
+import base64
 
 # Read the message length
 text_length_bytes = sys.stdin.read(4)
 if len(text_length_bytes) == 0:
 	sys.exit(0)
+
 msg_len = struct.unpack('i', text_length_bytes)[0]
 
 # Load message
-json = simplejson.loads(sys.stdin.read(msg_len).decode('utf-8'))
-url = json['srcUrl']
+message = sys.stdin.read(msg_len).decode('utf-8')
+json = json.loads(message)
+
+data = base64.b64decode(json['data'])
 programm = json['bin']
-basename = os.path.basename(url)
-tmp_path = '/tmp'
+temp_name = next(tempfile._get_candidate_names()) + '.png'
+out_path = '/tmp/' + temp_name
 
-# Fetch the file
-local_filename, headers = urllib.urlretrieve(json['srcUrl'], tmp_path+'/'+basename)
+if platform.system() == 'Darwin':
+    programm = '/Applications/' + programm.capitalize() + '.app/Contents/MacOS/' + programm
 
-# Open
-os.system('/usr/bin/env '+programm+' "'+local_filename+'"'+' > /tmp/test')
+out_file = open(out_path, 'w')
+out_file.write(data)
+out_file.close()
+
+command = '/usr/bin/env ' +programm+ ' ' +out_path+ ' > /tmp/native_host.log'
+
+os.system(command)
