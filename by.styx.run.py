@@ -32,6 +32,6 @@ out_file = open(out_path, 'w')
 out_file.write(data)
 out_file.close()
 
-command = '/usr/bin/env ' +programm+ ' ' +out_path+ ' > /tmp/native_host.log'
+command = '/usr/bin/env ' + programm + ' ' + out_path + ' > /tmp/native_host.log'
 
 os.system(command)
